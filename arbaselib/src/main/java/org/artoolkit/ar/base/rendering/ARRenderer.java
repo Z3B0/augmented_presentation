@@ -64,7 +64,31 @@ public class ARRenderer implements GLSurfaceView.Renderer {
      * Allows subclasses to load markers and prepare the scene. This is called after 
      * initialisation is complete.
      */
-	public boolean configureARScene() {
+
+    protected int addMarker(String path) {
+        return toolKit.addMarker(path);
+    }
+
+    protected float[] getProjectionMatrix(){
+        return toolKit.getProjectionMatrix();
+    }
+
+    protected boolean queryMarkerVisible(int markerId) {
+        return toolKit.queryMarkerVisible(markerId);
+    }
+
+    protected float[] queryMarkerTransformation(int markerId){
+        return toolKit.queryMarkerTransformation(markerId);
+    }
+
+
+    private ARToolKit toolKit;
+
+    public ARRenderer(ARToolKit toolKit) {
+        this.toolKit = toolKit;
+    }
+
+    public boolean configureARScene() {
 		return true;
 	}
 	
@@ -79,7 +103,7 @@ public class ARRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onDrawFrame(GL10 gl) {
-    	if (ARToolKit.getInstance().isRunning()) {    		
+    	if (toolKit.isRunning()) {
     		draw(gl);
     	}    	
     }

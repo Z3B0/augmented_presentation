@@ -67,6 +67,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.util.Observable;
+
 
 public abstract class ARActivity extends Activity implements CameraEventListener {
 
@@ -86,7 +88,8 @@ public abstract class ARActivity extends Activity implements CameraEventListener
 	private GLSurfaceView glView;	
 	
 
-	protected ARRenderer renderer;	
+	protected ARRenderer renderer;
+	private ARToolKit toolKit = new ARToolKit();
 
 	protected FrameLayout mainLayout; 
 
@@ -99,15 +102,8 @@ public abstract class ARActivity extends Activity implements CameraEventListener
         // This needs to be done just only the very first time the application is run,
         // or whenever a new preference is added (e.g. after an application upgrade).
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        
-        // Correctly configures the activity window for running AR in a layer
-        // on top of the camera preview. This includes entering 
-        // fullscreen landscape mode and enabling transparency. 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+
 
         AndroidUtils.reportDisplayInformation(this);
     }
@@ -115,8 +111,9 @@ public abstract class ARActivity extends Activity implements CameraEventListener
     /**
      * Allows subclasses to supply a custom {@link Renderer}.
      * @return The {@link Renderer} to use.
+	 * @param toolKit
      */
-    protected abstract ARRenderer supplyRenderer();
+    protected abstract ARRenderer supplyRenderer(ARToolKit toolKit);
     
     /**
      * Allows subclasses to supply a {@link FrameLayout} which will be populated
@@ -132,33 +129,7 @@ public abstract class ARActivity extends Activity implements CameraEventListener
 
     	Log.i(TAG, "Activity starting.");
     	
-    	if (ARToolKit.getInstance().initialiseNative(this.getCacheDir().getAbsolutePath()) == false) { // Use cache directory for Data files.
-        	
-    		 new AlertDialog.Builder(this)
-    	      .setMessage("The native library is not loaded. The application cannot continue.")
-    	      .setTitle("Error")
-    	      .setCancelable(true)
-    	      .setNeutralButton(android.R.string.cancel,
-    	         new DialogInterface.OnClickListener() {
-    	         public void onClick(DialogInterface dialog, int whichButton){ finish(); }    	         
-    	         })
-    	      .show();
 
-    		return;
-        }
-    	
-    	mainLayout = supplyFrameLayout();
-    	if (mainLayout == null) {
-    		Log.e(TAG, "Error: supplyFrameLayout did not return a layout.");
-    		return;
-    	}
- 
-    	renderer = supplyRenderer();
-    	if (renderer == null) {
-    		Log.e(TAG, "Error: supplyRenderer did not return a renderer.");
-    		// No renderer supplied, use default, which does nothing
-    		renderer = new ARRenderer();
-    	}
     			       
     }
     
@@ -231,37 +202,7 @@ public abstract class ARActivity extends Activity implements CameraEventListener
 		}
 	}
 	
-	/**
-	 * Returns the camera preview that is providing the video frames.
-	 * @return The camera preview that is providing the video frames.
-	 */
-    public CaptureCameraPreview getCameraPreview() {
-    	return preview;
-    }
-    
-    /**
-     * Returns the GL surface view.
-     * @return The GL surface view.
-     */
-    public GLSurfaceView getGLView() {
-    	return glView;
-    }
-    
-    @Override
-	public void cameraPreviewStarted(int width, int height, int rate, int cameraIndex, boolean cameraIsFrontFacing) {
-	
-		if (ARToolKit.getInstance().initialiseAR(width, height, "Data/camera_para.dat", cameraIndex, cameraIsFrontFacing)) { // Expects Data to be already in the cache dir. This can be done with the AssetUnpacker.
-			Log.i(TAG, "Camera initialised");
-		} else {
-			// Error
-			Log.e(TAG, "Error initialising camera. Cannot continue.");
-			finish();
-		}
-		
-		Toast.makeText(this, "Camera settings: " + width + "x" + height + "@" + rate + "fps", Toast.LENGTH_SHORT).show();
-		
-		firstUpdate = true;
-	}
+
     
     //
     // At present, the underlying ARWrapper is not thread-safe,
@@ -332,37 +273,11 @@ public abstract class ARActivity extends Activity implements CameraEventListener
 	}	
 	*/
     
-	@Override
-	public void cameraPreviewFrame(byte[] frame) {
-	
-		if (firstUpdate) {
-			// ARToolKit has been initialised. The renderer can now add markers, etc...
-			if (renderer.configureARScene()) {
-				Log.i(TAG, "Scene configured successfully");
-			} else { 
-				// Error
-				Log.e(TAG, "Error configuring scene. Cannot continue.");
-				finish();
-			}
-			firstUpdate = false;
-		}
-		
-		if (ARToolKit.getInstance().convertAndDetect(frame)) {
-			
-			// Update the renderer as the frame has changed
-			if (glView != null) glView.requestRender();
-			
-			onFrameProcessed();
-		}
-		
-	} 
-	
-    public void onFrameProcessed() {
-    }
+
     
 	@Override
 	public void cameraPreviewStopped() {
-		ARToolKit.getInstance().cleanup();
+		toolKit.cleanup();
 	}	
 
 	protected void showInfo() {

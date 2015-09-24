@@ -84,24 +84,17 @@ public class ARToolKit {
 		else Log.i(TAG, "Loaded native library.");
 	}
 
-	/**
-	 * Single instance of the ARToolKit class.
-	 */
-	private static ARToolKit instance = null;
 
 	/**
 	 * Implementation of the singleton pattern to provide a sole instance of the ARToolKit class.
 	 * @return The single instance of ARToolKit.
 	 */
-	public static ARToolKit getInstance() {
-		if (instance == null) instance = new ARToolKit();
-		return instance;
-	}
+
 
 	/**
 	 * Private constructor as required by the singleton pattern.
 	 */
-	private ARToolKit() {
+	public ARToolKit() {
 		Log.i(TAG, "ARToolKit constructor");
 	}
 

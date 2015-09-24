@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <style name="LoginTheme" parent="AppThemeTranslucent">
+        <item name="android:colorButtonNormal">@color/accent</item>
+    </style>
+
+    <style name="AppThemeTranslucentStatus" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+
+
+    <style name="AppThemeTranslucent" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+</resources>

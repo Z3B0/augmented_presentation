@@ -1,0 +1,31 @@
+{
+	"name" : "Test lecture one",
+	"date" : "2015-10-01 15:30",
+	"speakers" : [
+		{
+			"id" : "01",
+			"name" : "Willy Wonka"	
+		},
+		{
+			"id" : "02",
+			"name" : "Evel Knievel"	
+		}
+	],
+	"slides" : [	
+		{
+			"text" : "Test slide 1",
+			"background" : "#ff0000",
+			"3dmodel": null
+		},
+		{
+			"text" : "Test slide 2",
+			"background" : "#ff0000",
+			"3dmodel": null
+		},
+		{
+			"text" : "Test slide 3",
+			"background" : "#ff0000",
+			"3dmodel": null
+		}
+	]
+}

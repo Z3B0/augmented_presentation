@@ -1,0 +1,42 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => unity/src/main/AndroidManifest.xml
+* assets/ => unity/src/main/assets/
+* libs/QCARUnityPlayer.jar => unity/libs/QCARUnityPlayer.jar
+* libs/Vuforia.jar => unity/libs/Vuforia.jar
+* libs/armeabi-v7a/libQCARUnityPlayer.so => unity/src/main/jniLibs/armeabi-v7a/libQCARUnityPlayer.so
+* libs/armeabi-v7a/libQCARWrapper.so => unity/src/main/jniLibs/armeabi-v7a/libQCARWrapper.so
+* libs/armeabi-v7a/libRenderingPlugin.so => unity/src/main/jniLibs/armeabi-v7a/libRenderingPlugin.so
+* libs/armeabi-v7a/libVuforia.so => unity/src/main/jniLibs/armeabi-v7a/libVuforia.so
+* libs/armeabi-v7a/libmain.so => unity/src/main/jniLibs/armeabi-v7a/libmain.so
+* libs/armeabi-v7a/libmono.so => unity/src/main/jniLibs/armeabi-v7a/libmono.so
+* libs/armeabi-v7a/libunity.so => unity/src/main/jniLibs/armeabi-v7a/libunity.so
+* libs/armeabi-v7a/libvrunity.so => unity/src/main/jniLibs/armeabi-v7a/libvrunity.so
+* libs/libprotobuf-java-2.6-nano.jar => unity/libs/libprotobuf-java-2.6-nano.jar
+* libs/unity-classes.jar => unity/libs/unity-classes.jar
+* libs/unitycardboardactivity.jar => unity/libs/unitycardboardactivity.jar
+* libs/unityvractivity.jar => unity/libs/unityvractivity.jar
+* libs/vrtoolkit.jar => unity/libs/vrtoolkit.jar
+* res/ => unity/src/main/res/
+* src/ => unity/src/main/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile files('libs/libprotobuf-java-2.6-nano.jar')
+    compile files('libs/QCARUnityPlayer.jar')
+    compile files('libs/unity-classes.jar')
+    compile files('libs/unitycardboardactivity.jar')
+    compile files('libs/unityvractivity.jar')
+    compile files('libs/vrtoolkit.jar')
+    compile files('libs/Vuforia.jar')
+}

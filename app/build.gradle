@@ -27,6 +27,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':arbaselib')
+    compile project(':unity')
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:retrofit-adapters:2.0.0-beta1'

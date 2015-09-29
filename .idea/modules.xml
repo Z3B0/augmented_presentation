@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/arbaselib/arbaselib.iml" filepath="$PROJECT_DIR$/arbaselib/arbaselib.iml" />
       <module fileurl="file://$PROJECT_DIR$/augmented_exploration.iml" filepath="$PROJECT_DIR$/augmented_exploration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/unity/unity.iml" filepath="$PROJECT_DIR$/unity/unity.iml" />
     </modules>
   </component>
 </project>

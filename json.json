@@ -1,31 +1,33 @@
 {
-	"name" : "Test lecture one",
-	"date" : "2015-10-01 15:30",
-	"speakers" : [
-		{
-			"id" : "01",
-			"name" : "Willy Wonka"	
-		},
-		{
-			"id" : "02",
-			"name" : "Evel Knievel"	
-		}
-	],
-	"slides" : [	
-		{
-			"text" : "Test slide 1",
-			"background" : "#ff0000",
-			"3dmodel": null
-		},
-		{
-			"text" : "Test slide 2",
-			"background" : "#ff0000",
-			"3dmodel": null
-		},
-		{
-			"text" : "Test slide 3",
-			"background" : "#ff0000",
-			"3dmodel": null
-		}
-	]
+    "name": "Test lecture one",
+    "date": "2015-10-01 15:30",
+    "description": "Test description",
+    "speakers": [
+        {
+            "id": "5620c59936dd2153068e9e81"
+        }
+    ],
+    "slides": [
+        {
+            "title": "Title One",
+            "text": "Test slide text1",
+            "backgroundColor": "#ff0000",
+            "backgroundUrl": null,
+            "model": null
+        },
+        {
+            "title": "Title Two",
+            "text": "Test slide text 2",
+            "backgroundColor": "#ff0000",
+            "backgroundUrl": null,
+            "model": null
+        },
+        {
+            "title": "Title Three",
+            "text": "Test slide text 3",
+            "backgroundColor": "#ff0000",
+            "backgroundUrl": null,
+            "model": null
+        }
+    ]
 }

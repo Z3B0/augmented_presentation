@@ -5,4 +5,15 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign_in">Sign in</string>
+    <string name="retry">Retry</string>
+    <string name="no_presentations">No presentations</string>
+    <string name="presentations">Presentations</string>
+    <string name="slides">slides</string>
+    <string name="nfc_place_descriptoin">Place your phone in the OcuClass device</string>
+    <string name="signing_in">Signing in</string>
+    <string name="err_login">Login error, check username/password</string>
+    <string name="welcome">Welcome</string>
+
+    <string name="facebook_app_id">907639242662775</string>
+    <string name="loading_presentation">Loading presentation</string>
 </resources>

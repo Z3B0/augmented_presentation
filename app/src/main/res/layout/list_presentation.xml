@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+
+        android:text="Math Lecture One"
+        android:textSize="18sp"
+        android:paddingBottom="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="48dp"
+        android:paddingTop="16dp"/>
+
+    <View
+
+        android:id="@+id/view_color_marker"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_margin="16dp"
+        android:background="#ff0000"/>
+
+
+    <TextView
+        android:id="@+id/txt_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:layout_below="@id/txt_title"
+        android:padding="16dp"
+        android:text="Description"/>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:id="@+id/cnt_thumb_large"
+        android:layout_height="168dp"
+        android:layout_marginLeft="16dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/txt_description"
+        android:layout_toLeftOf="@+id/cnt_thumb_one"
+
+        android:layout_marginRight="4dp"
+        app:cardCornerRadius="2dp">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/img_thumb_large"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_one"
+          />
+
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/cnt_thumb_one"
+        android:layout_below="@+id/txt_description"
+        android:layout_alignParentRight="true"
+        android:layout_height="80dp"
+        android:layout_width="80dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="16dp"
+        app:cardCornerRadius="2dp">
+
+        <ImageView
+            android:id="@+id/img_thumb_one"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_two"
+            />
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/cnt_thumb_two"
+        android:layout_below="@+id/cnt_thumb_one"
+        android:layout_alignParentRight="true"
+        android:layout_height="80dp"
+        android:layout_width="80dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="16dp"
+
+        app:cardCornerRadius="2dp">
+
+        <ImageView
+            android:id="@+id/img_thumb_two"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_three"
+            />
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+    <TextView
+        android:id="@+id/txt_info_slide_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cnt_thumb_large"
+        android:drawableLeft="@drawable/ic_view_list_black_18dp"
+        android:drawablePadding="4dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="4 Slides"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:layout_marginTop="8dp"
+        android:id="@+id/txt_info_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cnt_thumb_large"
+        android:layout_toRightOf="@+id/txt_info_slide_count"
+        android:drawableLeft="@drawable/ic_today_black_18dp"
+        android:drawablePadding="4dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="2015-04-01"
+        android:textSize="12sp"/>
+
+
+</RelativeLayout>

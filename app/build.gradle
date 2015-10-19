@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "se.chalmers.agumentedexploration"
+        applicationId "se.chalmers.ocuclass"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
@@ -26,9 +27,9 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':arbaselib')
     compile project(':unity')
     compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.0'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:retrofit-adapters:2.0.0-beta1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -43,5 +44,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
+    compile 'com.google.android.gms:play-services-wearable:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 }
 

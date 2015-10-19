@@ -1,1 +1,1 @@
-include ':app', ':arbaselib', ':unity'
+include ':app', ':arbaselib', ':unity', ':wear'

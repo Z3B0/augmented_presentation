@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <permission android:name="se.chalmers.ocuclass.permission.C2D_MESSAGE"
                 android:protectionLevel="signature" />
 
@@ -71,14 +73,14 @@
 
         <activity
             android:name=".ui.NfcDetectActivity"
-            android:theme="@style/AppThemeTranslucent">
+            android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:theme="@style/LoginTheme">
 
             <intent-filter>
@@ -97,30 +99,6 @@
         <service android:name=".service.ConnectionService"     android:launchMode="singleTop" />
 
 
-        <receiver
-            android:name=".gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="se.chalmers.ocuclass" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name=".gcm.GcmListenerService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".gcm.GcmInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
-        </service>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
                    android:value="@string/facebook_app_id"/>

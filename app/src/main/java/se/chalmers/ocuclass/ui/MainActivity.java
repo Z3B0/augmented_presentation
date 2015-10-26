@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import java.io.Serializable;
+import java.util.List;
 
 import se.chalmers.ocuclass.R;
 import se.chalmers.ocuclass.model.Presentation;
@@ -18,9 +19,10 @@ import se.chalmers.ocuclass.ui.fragment.MainFragment;
 public class MainActivity extends ToolbarActivity {
 
     private static final String TAG_FRAGMENT = "tag_fragment";
-    private static final String EXTRA_PRESENTATION = "extra_presentation";
     private static final String EXTRA_USER = "extra_user";
     private MainFragment fragment;
+    private User user;
+    private List<Presentation> presentations;
 
 
     @Override
@@ -31,10 +33,12 @@ public class MainActivity extends ToolbarActivity {
 
         getToolbar().setTitle(getString(R.string.presentations));
 
+        this.user = (User) getIntent().getExtras().getSerializable(EXTRA_USER);
+
         FragmentManager fm = getSupportFragmentManager();
 
         if(savedInstanceState==null){
-            fragment = MainFragment.newInstance();
+            fragment = MainFragment.newInstance(user);
             fm.beginTransaction().add(R.id.cnt_fragment,fragment,TAG_FRAGMENT).commit();
         }else{
             fragment = (MainFragment) fm.findFragmentByTag("tag_fragment");
@@ -44,11 +48,10 @@ public class MainActivity extends ToolbarActivity {
 
     }
 
-    public static void startActivity(Context context, User user, Presentation presentation) {
+    public static void startActivity(Context context, User user) {
 
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(EXTRA_PRESENTATION, presentation);
-        intent.putExtra(EXTRA_USER,user);
+        intent.putExtra(EXTRA_USER, user);
         context.startActivity(intent);
 
     }

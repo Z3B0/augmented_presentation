@@ -1,29 +1,29 @@
 package se.chalmers.ocuclass.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.unity3d.player.UnityPlayer;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -32,13 +32,16 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import se.chalmers.ocuclass.R;
+import se.chalmers.ocuclass.adapters.HudPagerAdapter;
 import se.chalmers.ocuclass.model.Presentation;
 import se.chalmers.ocuclass.model.PresentationEvent;
 import se.chalmers.ocuclass.model.User;
-import se.chalmers.ocuclass.net.BaseResponse;
 import se.chalmers.ocuclass.net.RestClient;
 import se.chalmers.ocuclass.service.WearListenerService;
-import se.chalmers.ocuclass.widget.HudView;
+import se.chalmers.ocuclass.ui.fragment.ConnectedUserHudFragment;
+import se.chalmers.ocuclass.ui.fragment.InfoHudFragment;
+import se.chalmers.ocuclass.widget.InfoHudView;
+import se.chalmers.ocuclass.widget.VerticalViewPager;
 
 /**
  * Created by richard on 29/09/15.
@@ -46,20 +49,27 @@ import se.chalmers.ocuclass.widget.HudView;
 public class UnityActivity extends RxAppCompatActivity {
 
 
+    public static final String MARKER_CAT = "94CE6B04";
+    public static final String MARKER_DOG = "C65E4B7A";
+    public static final String MARKER_SNAIL = "56426D10";
+
+
     private String TAG = UnityActivity.class.getSimpleName();
-    private TextView txtTimeCurrent;
-    private TextView txtTimeElapsed;
 
     private static final SimpleDateFormat DATE_FORMAT_TIME = new SimpleDateFormat("HH:mm");
     private static final String EXTRA_PRESENTATION = "extra_presentation";
     private static final String UNITY_CLASS_PRESENTATION_HANDLER = "PresentationHandler";
     private static final String UNITY_METHOD_SETUP = "Setup";
+    private static final String UNITY_METHOD_ROTATE = "RotateModel";
     private static final String UNITY_METHOD_LERP = "StartLerping";
     private static final String EXTRA_USER = "extra_user";
 
     protected UnityPlayer mUnityPlayer;
     private User user;
     private Presentation presentation;
+    private long lastbackPressed = 0;
+    private InfoHudFragment infoHudFragment;
+    private VerticalViewPager pager;
 
     public static class RetryWithDelay implements
             Func1<Observable<? extends Throwable>, Observable<?>> {
@@ -106,23 +116,80 @@ public class UnityActivity extends RxAppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String direction = intent.getStringExtra(WearListenerService.EVENT_WEAR_DIRECTION);
+            String direction = intent.getStringExtra(WearListenerService.EXTRA_DIRECTION);
 
-            //Toast.makeText(UnityActivity.this, direction, Toast.LENGTH_LONG).show();
 
-            mUnityPlayer.UnitySendMessage(UNITY_CLASS_PRESENTATION_HANDLER, UNITY_METHOD_LERP, direction);
+            if (handleEvent(direction)) return;
+
+            if(direction.equals("up")||direction.equals("down")){
+                pager.setCurrentItem(pager.getCurrentItem()+(direction.equals("up")?-1:1),true);
+                return;
+            }
+
+
 
         }
     };
+
+    private boolean handleEvent(String direction) {
+        if(direction.equals("left")||direction.equals("right")){
+            sendUnityMessage(UNITY_CLASS_PRESENTATION_HANDLER, UNITY_METHOD_LERP, direction);
+
+            return true;
+        }
+
+        if(direction.equals("rotate")){
+            sendUnityMessage(UNITY_CLASS_PRESENTATION_HANDLER, UNITY_METHOD_ROTATE, direction);
+            return true;
+        }
+        return false;
+    }
+
+    private void sendUnityMessage(String unityClass, String unityMethod, String unityData) {
+        try{
+            UnityPlayer.UnitySendMessage(unityClass,unityMethod,unityData);
+        }catch (Exception ex){
+            Log.e(TAG,"=======================ERRROR================");
+            Log.e(TAG,"=======================ERRROR================");
+            Log.e(TAG,"=======================ERRROR================");
+            Log.e(TAG,"=======================ERRROR================");
+            ex.printStackTrace();
+            Log.e(TAG,"=======================ERRROR================");
+            Log.e(TAG,"=======================ERRROR================");
+            Log.e(TAG,"=======================ERRROR================");
+            Log.e(TAG,"=======================ERRROR================");
+        }
+    }
+
+
+
+    public static class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandler {
+        private final String LINE_SEPARATOR = "\n";
+        public static final String LOG_TAG = ExceptionHandler.class.getSimpleName();
+
+        @SuppressWarnings("deprecation")
+        public void uncaughtException(Thread thread, Throwable exception) {
+            StringWriter stackTrace = new StringWriter();
+            exception.printStackTrace(new PrintWriter(stackTrace));
+
+            StringBuilder errorReport = new StringBuilder();
+            errorReport.append(stackTrace.toString());
+
+            Log.e(LOG_TAG, errorReport.toString());
+
+            exception.printStackTrace();
+
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(10);
+        }
+
+    }
 
 
 
     // Setup activity layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        presentation = (Presentation)getIntent().getExtras().getSerializable(EXTRA_PRESENTATION);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
@@ -132,42 +199,69 @@ public class UnityActivity extends RxAppCompatActivity {
         setContentView(R.layout.activity_unity);
 
 
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+
+        presentation = (Presentation)getIntent().getExtras().getSerializable(EXTRA_PRESENTATION);
+        user = (User)getIntent().getExtras().getSerializable(EXTRA_USER);
+
+        WearListenerService.presentationId = presentation.getId();
+
+
+
+
         FrameLayout cntPlayer = (FrameLayout) findViewById(R.id.cnt_player);
 
-        txtTimeCurrent = (TextView)findViewById(R.id.txt_time_current);
-        txtTimeElapsed = (TextView)findViewById(R.id.txt_time_elapsed);
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        int statusBarHeight = 0;
+        if (resourceId > 0) {
+            statusBarHeight =  resources.getDimensionPixelSize(resourceId);
+        }
+
+        boolean isTeacher = user.getUserType()== User.UserType.TEACHER;
+
+        pager = (VerticalViewPager)findViewById(R.id.viewpager);
+
+        pager.setAdapter(new HudPagerAdapter(getSupportFragmentManager(), presentation, isTeacher));
+
+        if(isTeacher) {
+            pager.setCurrentItem(Integer.MAX_VALUE / 2, false);
+        }
+
+        //stereoView.setPadding(stereoView.getPaddingLeft(),stereoView.getPaddingTop(),stereoView.getPaddingBottom(),stereoView.getPaddingRight()+statusBarHeight);
 
 
+
+
+
+        //FIXME bring back
         mUnityPlayer = new UnityPlayer(this);
         cntPlayer.addView(mUnityPlayer);
         mUnityPlayer.requestFocus();
 
 
-        //checkForEvents();
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver,
                 new IntentFilter(WearListenerService.EVENT_WEAR_DIRECTION));
 
 
-        mUnityPlayer.UnitySendMessage(UNITY_CLASS_PRESENTATION_HANDLER, UNITY_METHOD_SETUP, new Gson().toJson(presentation));
+        //mUnityPlayer.UnitySendMessage(UNITY_CLASS_PRESENTATION_HANDLER, UNITY_METHOD_SETUP, new Gson().toJson(presentation));
     }
 
 
     private void checkForEvents() {
 
-        //Log.d(TAG, "calling check for events...");
 
-        RestClient.service().getEvent("unused")
-                .retryWhen(new UnityActivity.RetryWithDelay(100,2000))
+        RestClient.service().getEvent(presentation.getId())
+                .retryWhen(new UnityActivity.RetryWithDelay(100, 2000))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).compose(this.<PresentationEvent>bindToLifecycle()).subscribe(new Action1<PresentationEvent>() {
             @Override
             public void call(PresentationEvent presentationEvent) {
 
-
-                mUnityPlayer.UnitySendMessage(UNITY_CLASS_PRESENTATION_HANDLER, UNITY_METHOD_LERP, presentationEvent.getEvent());
-
+                handleEvent(presentationEvent.getEvent());
 
                 checkForEvents();
                 //Log.d(TAG, "event found!" + presentationEvent.getEvent());
@@ -212,7 +306,7 @@ public class UnityActivity extends RxAppCompatActivity {
     }
 
     private void updateHud() {
-        Observable.interval(1, TimeUnit.MINUTES).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).compose(this.<Long>bindToLifecycle()).subscribe(new Action1<Long>() {
+        Observable.interval(5,60, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).compose(this.<Long>bindToLifecycle()).subscribe(new Action1<Long>() {
             @Override
             public void call(Long secondsElapsed) {
 
@@ -223,15 +317,40 @@ public class UnityActivity extends RxAppCompatActivity {
 
     public void setLastSlideIndex(String index){
 
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
+        Log.d(TAG,"======= HERE??!?!?!");
     }
 
     private void setTime(Long secondsElapsed) {
         int hours = (int) (secondsElapsed/60);
         int minutes = (int)(secondsElapsed%60);
 
-        txtTimeElapsed.setText((hours>0?hours+"h ":"")+minutes+"m");
+        //pager.findFragmentByClassName()
 
-        txtTimeCurrent.setText(DATE_FORMAT_TIME.format(Calendar.getInstance().getTime()));
+        infoHudFragment.setInfo(DATE_FORMAT_TIME.format(Calendar.getInstance().getTime()), (hours > 0 ? hours + "h " : "") + minutes+"m");
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+
+        if(fragment instanceof InfoHudFragment){
+            this.infoHudFragment = (InfoHudFragment) fragment;
+        }
+
+
+        super.onAttachFragment(fragment);
     }
 
     // This ensures the layout will be correct.
@@ -247,6 +366,23 @@ public class UnityActivity extends RxAppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         mUnityPlayer.windowFocusChanged(hasFocus);
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+
+
+        if(System.currentTimeMillis()-lastbackPressed<=1000){
+            finish();
+        }else{
+            Toast.makeText(this, R.string.press_again_to_confirm, Toast.LENGTH_SHORT).show();
+        }
+
+        lastbackPressed = System.currentTimeMillis();
+    }
+
+    /*
 
     // For some reason the multiple keyevent type is not supported by the ndk.
     // Force event injection by overriding dispatchKeyEvent().
@@ -273,8 +409,8 @@ public class UnityActivity extends RxAppCompatActivity {
         return mUnityPlayer.injectEvent(event);
     }
 
-    /*API12*/
+
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mUnityPlayer.injectEvent(event);
-    }
+    }*/
 }

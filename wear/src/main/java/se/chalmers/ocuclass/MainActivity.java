@@ -1,48 +1,52 @@
 package se.chalmers.ocuclass;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DismissOverlayView;
-import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
-import android.support.wearable.view.WatchViewStub;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int FLING_SENSITIVITY = 50;
     private static final String EVENT_RIGHT = "right";
     private static final String EVENT_LEFT = "left";
+    private static final String EVENT_UP = "up";
+    private static final String EVENT_DOWN = "down";
+    private static final String EVENT_ROTATE = "rotate";
     private static final String PATH_WEAR_DIRECTION_EVENT = "/wear-direction-event";
 
     private DismissOverlayView dismissOverlay;
     private GestureDetector mDetector;
     private GoogleApiClient mGoogleApiClient;
     private DirectionAdapter adapter;
+    private GridViewPager gridViewPager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setAmbientEnabled();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -52,15 +56,17 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
         adapter = new DirectionAdapter(getFragmentManager());
 
-        final GridViewPager gridViewPager = (GridViewPager) findViewById(R.id.grid_view_pager);
+        gridViewPager = (GridViewPager) findViewById(R.id.grid_view_pager);
         gridViewPager.setAdapter(adapter);
 
-        gridViewPager.setCurrentItem(1,Integer.MAX_VALUE/2);
+        gridViewPager.setCurrentItem(Integer.MAX_VALUE/2,Integer.MAX_VALUE/2);
         adapter.notifyDataSetChanged();
 
         gridViewPager.setOnPageChangeListener(new GridViewPager.OnPageChangeListener() {
 
-            private int lastPage = -1;
+            private int lastCol = 0;
+            private int lastRow = 0;
+
 
             @Override
             public void onPageScrolled(int i, int i1, float v, float v1, int i2, int i3) {
@@ -70,17 +76,24 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             @Override
             public void onPageSelected(int row, int col) {
 
-                if(lastPage>-1&&col > lastPage){
 
+
+
+
+                if(col > lastCol){
                     sendEventToApp(EVENT_RIGHT);
-                    Log.d("tasfda", "next");
                 }
-                if(lastPage>-1&&col < lastPage){
+                else if(col < lastCol){
                     sendEventToApp(EVENT_LEFT);
-                    Log.d("tasfda", "prev");
+                }else if(row > lastRow){
+                    sendEventToApp(EVENT_DOWN);
+                }
+                else if(col < lastRow){
+                    sendEventToApp(EVENT_UP);
                 }
 
-                lastPage = col;
+                lastRow = row;
+                lastCol = col;
 
             }
 
@@ -89,6 +102,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
             }
         });
+
+
 
 
 
@@ -138,8 +153,33 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     }
 
+    private Fragment findFragmentInPager(GridViewPager pager, int row, int column)
+    {
+
+        long itemId = adapter.getFragmentId(row, column);
+        return getFragmentManager().findFragmentByTag( "android:switcher:" + pager.getId() + ":" + itemId);
+    }
+
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
 
 
+
+        ((ArrowFragment)findFragmentInPager(gridViewPager,gridViewPager.getCurrentItem().y,gridViewPager.getCurrentItem().x)).onEnterAmbient();
+
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+
+        ((ArrowFragment)findFragmentInPager(gridViewPager,gridViewPager.getCurrentItem().y,gridViewPager.getCurrentItem().x)).onExitAmbient();
+
+        /*
+        mStateTextView.setTextColor(Color.GREEN);
+        mStateTextView.getPaint().setAntiAlias(true);*/
+    }
 
 
 
@@ -179,13 +219,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     }
 
     private void showErrorMessage() {
-        Toast.makeText(this,"Unable to send gesture",Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Unable to send gesture", Toast.LENGTH_SHORT);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mGoogleApiClient.connect();
+
 
     }
 
@@ -215,5 +256,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+    public void onClickRotate() {
+        sendEventToApp(EVENT_ROTATE);
+    }
+
 
 }

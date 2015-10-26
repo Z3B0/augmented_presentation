@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textSize="34sp"
+        android:id="@+id/txt_username"
+        android:layout_toRightOf="@+id/img_instruction"
+        android:layout_toEndOf="@+id/img_instruction"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/card_add"
+        android:layout_margin="16dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/img_instruction"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:text="@string/nfc_place_description"
+        android:layout_below="@+id/txt_username"
+        android:layout_toRightOf="@+id/img_instruction"
+        android:layout_toEndOf="@+id/img_instruction"/>
+
+</RelativeLayout>

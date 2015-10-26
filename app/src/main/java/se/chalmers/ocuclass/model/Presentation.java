@@ -13,7 +13,7 @@ import se.chalmers.ocuclass.net.BaseResponse;
 /**
  * Created by richard on 01/10/15.
  */
-public class Presentation extends BaseResponse implements Serializable {
+public class Presentation implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -33,6 +33,17 @@ public class Presentation extends BaseResponse implements Serializable {
     @SerializedName("slides")
     @Expose
     private List<Slide> slides = new ArrayList<Slide>();
+
+    public Presentation(Presentation presentation) {
+
+
+        this.name = presentation.getName();
+        this.slides = presentation.getSlides();
+        this.date = presentation.getDate();
+        this.description = presentation.getDate();
+        this.id = presentation.getId();
+        this.speakers = presentation.getSpeakers();
+    }
 
     /**
      *

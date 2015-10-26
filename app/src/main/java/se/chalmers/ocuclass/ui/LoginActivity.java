@@ -1,11 +1,16 @@
 package se.chalmers.ocuclass.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import se.chalmers.ocuclass.R;
+import se.chalmers.ocuclass.model.User;
+import se.chalmers.ocuclass.net.RestClient;
+import se.chalmers.ocuclass.ui.fragment.ConnectedUserHudFragment;
 import se.chalmers.ocuclass.ui.fragment.LoginFragment;
 import se.chalmers.ocuclass.util.Utils;
 
@@ -16,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private static final String TAG_FRAGMENT = "tag_fragment";
-    private LoginFragment fragment;
+    private Fragment fragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,16 +42,27 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
+
         FragmentManager fm = getSupportFragmentManager();
 
         if(savedInstanceState==null){
+
             fragment = LoginFragment.newInstance();
             fm.beginTransaction().add(R.id.cnt_fragment,fragment,TAG_FRAGMENT).commit();
+            //RestClient.getInstance().setUser(new User("a@a.se","Test",null),"a");
+            //fm.beginTransaction().add(R.id.cnt_fragment, ConnectedUserHudFragment.newInstance("56260a45cb099a1100e8449a")).commit();
         }else{
             fragment = (LoginFragment) fm.findFragmentByTag("tag_fragment");
         }
 
-        cntFragment.setPadding(0,0,0, Utils.getNavigationBarHeight(this));
+
+
+
+
+
+        //FIXME RESTORE
+        //cntFragment.setPadding(0,0,0, Utils.getNavigationBarHeight(this));
 
 
 

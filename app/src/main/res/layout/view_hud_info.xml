@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<se.chalmers.ocuclass.widget.InfoHudView
+    android:paddingBottom="100dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="100dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>

@@ -49,7 +49,9 @@ public class RestClient {
     }
 
     public void setUser(User user, String password){
-        user.setPassword(password);
+        if(user!=null) {
+            user.setPassword(password);
+        }
         this.user = user;
         prefs.edit().putString(PREF_KEY_USER,gson.toJson(user)).apply();
     }

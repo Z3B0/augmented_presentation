@@ -1,19 +1,16 @@
 package se.chalmers.ocuclass.net;
 
-import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
 /**
- * Created by richard on 14/10/15.
+ * Created by richard on 20/10/15.
  */
-public class BaseResponse {
+public class BaseResponse implements Serializable {
 
 
+    private boolean success = false;
 
-    @SerializedName("error")
-    public String error;
-
-    @SerializedName("message")
-    public String message;
-
-    public boolean success;
+    public boolean isSuccessful() {
+        return success;
+    }
 }

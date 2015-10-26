@@ -18,7 +18,7 @@
         <!--<item name="android:background">@color/background_light</item>-->
     </style>
 
-    <style name="LoginTheme" parent="AppThemeTranslucent">
+    <style name="LoginTheme" parent="AppThemeTranslucentStatus">
         <item name="colorButtonNormal">@color/accent</item>
     </style>
 

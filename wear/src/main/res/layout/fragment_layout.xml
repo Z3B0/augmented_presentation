@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:background="@drawable/background"
+             android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/img_arrows"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+
+        android:src="@drawable/ic_arrows"
+        />
+
+    <android.support.wearable.view.CircularButton
+        android:src="@drawable/ic_3d_rotation"
+        android:color="#2878ff"
+        android:clickable="true"
+        app:pressedButtonTranslationZ="2dp"
+        app:buttonRippleColor="#152c66"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:layout_gravity="center"
+        android:id="@+id/btn_rotate"/>
+
+    <!--app:rippleColor="#2955C5"-->
+
+</FrameLayout>

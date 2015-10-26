@@ -14,11 +14,17 @@ import android.nfc.tech.NfcB;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Bundle;
+import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import java.util.HashMap;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -28,16 +34,18 @@ import se.chalmers.ocuclass.model.Presentation;
 import se.chalmers.ocuclass.model.User;
 import se.chalmers.ocuclass.net.BaseResponse;
 import se.chalmers.ocuclass.net.RestClient;
+import se.chalmers.ocuclass.ui.fragment.OptionsDialogFragment;
+import se.chalmers.ocuclass.ui.fragment.ProgressDialogFragment;
 
 /**
  * Created by richard on 08/10/15.
  */
-public class NfcDetectActivity extends RxAppCompatActivity {
+public class NfcDetectActivity extends RxAppCompatActivity implements OptionsDialogFragment.Callback {
 
     private static final String EXTRA_USER = "extra_user";
     private static final String TAG = NfcDetectActivity.class.getSimpleName();
-    private static final String CARD_ID_ONE = "404FCDF7"; //Richards kort
-    private static final String CARD_ID_TWO = "F6D33280"; //paks kort
+    /*private static final String CARD_ID_ONE = "404FCDF7"; //Richards kort
+    private static final String CARD_ID_TWO = "F6D33280"; //paks kort*/
     private static final String EXTRA_PRESENTATION = "extra_presentation";
     private static final String[][] NTC_TECH_LIST = new String[][] {
             new String[] {
@@ -51,12 +59,16 @@ public class NfcDetectActivity extends RxAppCompatActivity {
                     Ndef.class.getName()
             }
     };
+    private static final String DIALOG_TAG_OPTIONS_DIALOG = "dialog_tag_options_dialog";
+
+    private ArrayMap<String,String> deviceOptions = new ArrayMap<>(5);
 
 
 
     private User user;
     private TextView txtUsername;
     private Presentation presentation;
+    private OptionsDialogFragment optionsDialogFragment;
 
     @Override
     protected void onResume() {
@@ -84,17 +96,54 @@ public class NfcDetectActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
 
+
+
+
+
+        deviceOptions.put(getString(R.string.device_cat), UnityActivity.MARKER_CAT);
+        deviceOptions.put(getString(R.string.device_dog), UnityActivity.MARKER_DOG);
+        deviceOptions.put(getString(R.string.device_snail), UnityActivity.MARKER_SNAIL);
+
+        optionsDialogFragment = OptionsDialogFragment.newInstance(deviceOptions.keySet().toArray(new String[]{}));
+
         txtUsername = (TextView) findViewById(R.id.txt_username);
 
         user = (User) getIntent().getExtras().getSerializable(EXTRA_USER);
         presentation = (Presentation) getIntent().getExtras().getSerializable(EXTRA_PRESENTATION);
 
 
-        txtUsername.setText(getString(R.string.welcome) + " "+user.getName());
+        txtUsername.setText(getString(R.string.welcome) + "\n" + user.getName());
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(user.getName());
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        toolbar.inflateMenu(R.menu.nfc);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_log_out:
+                        RestClient.getInstance().setUser(null,null);
+                        finish();
+                        break;
+                    case R.id.action_join:
+                        optionsDialogFragment.show(getSupportFragmentManager(),DIALOG_TAG_OPTIONS_DIALOG);
+                        break;
+
+                }
+                return false;
+            }
+        });
 
 
     }
-
 
 
     @Override
@@ -118,24 +167,7 @@ public class NfcDetectActivity extends RxAppCompatActivity {
             Log.d(TAG,"==================");
 
 
-            RestClient.service().presentationJoin(presentation.getId(), user.getUserId(), tag).subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread()).compose(this.<BaseResponse>bindToLifecycle()).subscribe(new Action1<BaseResponse>() {
-
-
-                @Override
-                public void call(BaseResponse joinResponse) {
-                    UnityActivity.startActivity(NfcDetectActivity.this, user,presentation);
-                }
-            }, new Action1<Throwable>() {
-                @Override
-                public void call(Throwable throwable) {
-                    throwable.printStackTrace();
-                    Toast.makeText(NfcDetectActivity.this, "Unable to join, try again!", Toast.LENGTH_LONG).show();
-                }
-            });
-
-
-
+            startPresentation(tag);
 
 
             //
@@ -144,6 +176,23 @@ public class NfcDetectActivity extends RxAppCompatActivity {
         }
     }
 
+    private void startPresentation(String tag) {
+        RestClient.service().presentationJoin(presentation.getId(), user.getId(), tag).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).compose(this.<BaseResponse>bindToLifecycle()).subscribe(new Action1<BaseResponse>() {
+
+
+            @Override
+            public void call(BaseResponse joinResponse) {
+                UnityActivity.startActivity(NfcDetectActivity.this, user, presentation);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                throwable.printStackTrace();
+                Toast.makeText(NfcDetectActivity.this, "Unable to join, try again!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
 
     private String byteArrayToHexString(byte [] inarray) {
@@ -169,5 +218,10 @@ public class NfcDetectActivity extends RxAppCompatActivity {
         intent.putExtra(EXTRA_PRESENTATION, presentation);
         context.startActivity(intent);
 
+    }
+
+    @Override
+    public void onOptionSelected(int index) {
+        startPresentation(deviceOptions.get(deviceOptions.keyAt(index)));
     }
 }

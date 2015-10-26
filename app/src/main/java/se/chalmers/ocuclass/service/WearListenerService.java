@@ -23,9 +23,12 @@ import com.google.gson.reflect.TypeToken;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.CountDownLatch;
 
+import rx.functions.Func1;
 import se.chalmers.ocuclass.model.PresentationEvent;
+import se.chalmers.ocuclass.net.BaseResponse;
 import se.chalmers.ocuclass.net.RestClient;
 
 
@@ -33,6 +36,9 @@ import se.chalmers.ocuclass.net.RestClient;
  * Created by richard on 05/10/15.
  */
 public class WearListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+
+    public static String presentationId;
 
     private static final String TAG = WearListenerService.class.getSimpleName();
     private static final String PATH_WEAR_DIRECTION_EVENT = "/wear-direction-event";
@@ -57,7 +63,6 @@ public class WearListenerService extends WearableListenerService implements Goog
         mGoogleApiClient.connect();
 
     }
-
 
 
     @Override
@@ -85,7 +90,7 @@ public class WearListenerService extends WearableListenerService implements Goog
 
 
             try {
-                if(latch.getCount()>0) {
+                if (latch.getCount() > 0) {
                     latch.await();
                 }
             } catch (InterruptedException e) {
@@ -95,12 +100,22 @@ public class WearListenerService extends WearableListenerService implements Goog
             String direction = new String(messageEvent.getData());
 
 
-            RestClient.service().postEvent(new PresentationEvent(direction)).toBlocking().first();
+            if (presentationId != null) {
 
 
-            Intent intent = new Intent(EVENT_WEAR_DIRECTION);
-            intent.putExtra(EXTRA_DIRECTION, direction);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                BaseResponse response = RestClient.service().postEvent(presentationId, new PresentationEvent(direction)).onErrorResumeNext(new Func1<Throwable, rx.Observable<? extends BaseResponse>>() {
+                    @Override
+                    public rx.Observable<? extends BaseResponse> call(Throwable throwable) {
+                        throwable.printStackTrace();
+                        return rx.Observable.just(null);
+                    }
+                }).toBlocking().first();
+
+                Intent intent = new Intent(EVENT_WEAR_DIRECTION);
+                intent.putExtra(EXTRA_DIRECTION, direction);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+            }
 
 
         }

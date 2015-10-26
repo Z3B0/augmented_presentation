@@ -5,11 +5,12 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatDialogFragment;
 
 /**
  * Created by richard on 13/10/15.
  */
-public class ProgressDialogFragment extends DialogFragment {
+public class ProgressDialogFragment extends AppCompatDialogFragment {
 
 
     private static final String EXTRA_MESSAGE = "extra_message";
@@ -49,8 +50,25 @@ public class ProgressDialogFragment extends DialogFragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroyView();
+    }
+
+
     public void setMessage(String message) {
 
-        ((ProgressDialog)getDialog()).setMessage(message);
+
+
+        if(getDialog()!=null) {
+            ((ProgressDialog)getDialog()).setMessage(message);
+            return;
+        }
+
+        Bundle args = new Bundle();
+        args.putString(EXTRA_MESSAGE, message);
+        this.setArguments(args);
     }
 }

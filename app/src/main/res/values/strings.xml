@@ -9,11 +9,25 @@
     <string name="no_presentations">No presentations</string>
     <string name="presentations">Presentations</string>
     <string name="slides">slides</string>
-    <string name="nfc_place_descriptoin">Place your phone in the OcuClass device</string>
+    <string name="nfc_place_description">Place your phone in the OcuClass device</string>
     <string name="signing_in">Signing in</string>
     <string name="err_login">Login error, check username/password</string>
     <string name="welcome">Welcome</string>
 
     <string name="facebook_app_id">907639242662775</string>
     <string name="loading_presentation">Loading presentation</string>
+    <string name="log_out">Log Out</string>
+    <string name="join">Join</string>
+    <string name="settings">Settings</string>
+    <string name="exit">Exit</string>
+    <string name="press_again_to_confirm">Press back again to exit</string>
+    <string name="loading">Loading...</string>
+    <string name="err_connected_user">Error loading users</string>
+    <string name="err_timeout">Timeout, please try again!</string>
+    <string name="fetching_data_from_facebook">Fetching Facebook data</string>
+    <string name="select_device">Select Device</string>
+    <string name="device_cat">Cat</string>
+    <string name="device_dog">Dog</string>
+    <string name="device_snail">Snail</string>
+    <string name="notes_dummy">Neuroscience is the scientific study of the nervous system.[1] Traditionally, neuroscience has been seen as a branch of biology. However, it is currently an interdisciplinary science that collaborates with other fields such as chemistry, cognitive science, computer science, engineering, linguistics, mathematics, medicine (including neurology), genetics, and allied disciplines including philosophy, physics, and psychology. It also exerts influence on other fields, such as neuroeducation,[2] neuroethics, and neurolaw. The term neurobiology is usually used interchangeably with the term neuroscience, although the former refers specifically to the biology of the nervous system, whereas the latter refers to the entire science of the nervous system.</string>
 </resources>

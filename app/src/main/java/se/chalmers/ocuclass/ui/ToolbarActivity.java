@@ -4,12 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import se.chalmers.ocuclass.R;
 
 /**
  * Created by richard on 24/09/15.
  */
-public class ToolbarActivity extends AppCompatActivity {
+public class ToolbarActivity extends RxAppCompatActivity {
 
 
     private Toolbar toolbarView;

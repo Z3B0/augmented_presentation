@@ -68,6 +68,10 @@ public class PresentationListAdapter extends RecyclerView.Adapter<PresentationLi
         return items==null?0:items.size();
     }
 
+    public List<Presentation> getItems() {
+        return items;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView txtDescription;

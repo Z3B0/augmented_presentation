@@ -21,12 +21,14 @@ public class DirectionAdapter extends FragmentGridPagerAdapter {
 
     @Override
     public int getRowCount() {
-        return 1;
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public int getColumnCount(int i) {
         return Integer.MAX_VALUE;
     }
+
+
 
 }

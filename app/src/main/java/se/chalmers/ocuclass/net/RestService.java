@@ -1,5 +1,7 @@
 package se.chalmers.ocuclass.net;
 
+import java.util.List;
+
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Headers;
@@ -29,24 +31,28 @@ public interface RestService {
     @GET("presentation/current")
     Observable<Presentation> presentation();
 
-    @GET("presentation/list")
-    Observable<PresentationListResponse> presentationList();
+    @GET("presentation")
+    Observable<List<Presentation>> presentationList();
+
+    @GET("presentation/viewers/{id}")
+    Observable<List<User>> presentationViewers(@Path("id") String presentationId);
+
 
     @GET("presentation/start/{id}")
     Observable<BaseResponse> presentationStart(@Path("id") String presentationId);
 
     @GET("presentation/join/{id}/{userId}/{deviceId}")
-    Observable<BaseResponse> presentationJoin(@Path("id") String presentationId, @Path("userId") String userId, @Query("deviceId") String deviceId);
+    Observable<BaseResponse> presentationJoin(@Path("id") String presentationId, @Path("userId") String userId, @Path("deviceId") String deviceId);
 
     @GET("presentation/leave/{id}/{userId}")
     Observable<BaseResponse> presentationLeave(@Path("id") String presentationId, @Path("userId") String userId);
 
     @GET("presentation/rate/{id}/{slide}/{userId}")
-    Observable<BaseResponse> presentations(@Path("id") String presentationId, @Path("slide") String slideId, @Query("userId") String username);
+    Observable<BaseResponse> presentations(@Path("id") String presentationId, @Path("slide") String slideId, @Path("userId") String username);
 
     @Headers("Content-Type: application/json")
     @POST("event/{id}")
-    Observable<Void> postEvent(@Body PresentationEvent event);
+    Observable<BaseResponse> postEvent(@Path("id") String presentationId,@Body PresentationEvent event);
 
     @GET("event/{id}")
     Observable<PresentationEvent> getEvent(@Path("id") String presentationId);

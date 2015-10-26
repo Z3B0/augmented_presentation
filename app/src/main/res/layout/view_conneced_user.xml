@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="200dp"
+             android:background="@android:color/black"
+             android:layout_height="28dp">
+
+
+    <se.chalmers.ocuclass.widget.RoundedImageView
+        android:id="@+id/img_icon"
+        android:layout_marginLeft="8dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/placeholder_one"/>
+
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:textColor="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="36dp"
+        android:text="Richard Davison"
+        android:layout_marginRight="36dp"
+        android:textSize="8sp"/>
+
+    <se.chalmers.ocuclass.widget.RoundedImageView
+        android:id="@+id/img_avatar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="8dp"
+        android:layout_gravity="center_vertical|right"
+        android:src="@drawable/placeholder_one"/>
+
+</FrameLayout>

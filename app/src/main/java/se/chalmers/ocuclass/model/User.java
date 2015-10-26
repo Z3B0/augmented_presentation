@@ -9,16 +9,25 @@ import se.chalmers.ocuclass.net.BaseResponse;
 /**
  * Created by richard on 24/09/15.
  */
-public class User extends BaseResponse implements Serializable{
+public class User implements Serializable{
+
+
 
 
     public User(String id, String name) {
-        this.userId = id;
+        this.id = id;
         this.name = name;
     }
 
     private User() {
 
+    }
+
+
+    private String deviceId = null;
+
+    public String getDeviceId() {
+        return deviceId;
     }
 
     public static User password(String username, String password){
@@ -61,9 +70,9 @@ public class User extends BaseResponse implements Serializable{
 
     }
 
+    private String id;
     private String username;
     private String name;
-    private String userId;
     private String password;
     private UserType userType = UserType.STUDENT;
     private String accountType = null;
@@ -76,8 +85,8 @@ public class User extends BaseResponse implements Serializable{
         return name;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {

@@ -7,10 +7,10 @@ android {
 
     defaultConfig {
         applicationId "se.chalmers.ocuclass"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
     }
     buildTypes {
         release {
@@ -35,17 +35,19 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.trello:rxlifecycle:0.3.0'
     compile 'com.trello:rxlifecycle-components:0.3.0'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.squareup.retrofit:retrofit-converters:2.0.0-beta1'
-    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
     compile 'com.google.android.gms:play-services-wearable:8.1.0'
     compile 'com.google.android.gms:play-services-gcm:8.1.0'
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.android.support:support-v4:23.1.0'
+    wearApp project(':wear')
 }
 

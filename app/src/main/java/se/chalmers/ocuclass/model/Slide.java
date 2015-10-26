@@ -3,10 +3,12 @@ package se.chalmers.ocuclass.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by richard on 01/10/15.
  */
-public class Slide {
+public class Slide implements Serializable {
 
     @SerializedName("text")
     @Expose

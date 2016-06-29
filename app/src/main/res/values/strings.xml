@@ -30,4 +30,8 @@
     <string name="device_dog">Dog</string>
     <string name="device_snail">Snail</string>
     <string name="notes_dummy">Neuroscience is the scientific study of the nervous system.[1] Traditionally, neuroscience has been seen as a branch of biology. However, it is currently an interdisciplinary science that collaborates with other fields such as chemistry, cognitive science, computer science, engineering, linguistics, mathematics, medicine (including neurology), genetics, and allied disciplines including philosophy, physics, and psychology. It also exerts influence on other fields, such as neuroeducation,[2] neuroethics, and neurolaw. The term neurobiology is usually used interchangeably with the term neuroscience, although the former refers specifically to the biology of the nervous system, whereas the latter refers to the entire science of the nervous system.</string>
+    <string name="ok">OK</string>
+    <string name="change_permissions">Please allow app to access all requested permissions by pressing ok and tap on permissions</string>
+    <string name="accept_pemissions">The app needs permissions to specific hardware to function, please allow in next step</string>
+    <string name="permissions">Permissions</string>
 </resources>

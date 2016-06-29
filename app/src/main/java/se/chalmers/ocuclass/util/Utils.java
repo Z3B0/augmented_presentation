@@ -1,16 +1,30 @@
 package se.chalmers.ocuclass.util;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+
+import se.chalmers.ocuclass.ui.NfcDetectActivity;
 
 /**
  * Created by admin on 2015-08-09.
  */
 public class Utils {
+
+    private static final String SCHEME = "package";
+    private static final String APP_PKG_NAME_21 = "com.android.settings.ApplicationPkgName";
+    private static final String APP_PKG_NAME_22 = "pkg";
+    private static final String APP_DETAILS_PACKAGE_NAME = "com.android.settings";
+    private static final String APP_DETAILS_CLASS_NAME = "com.android.settings.InstalledAppDetails";
+    public static final int REQ_CODE_SETTINGS = 0x3f4f;
 
 
 
@@ -69,5 +83,24 @@ public class Utils {
         int actionBarSize = (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
         return actionBarSize;
+    }
+
+    public static void showInstalledAppDetails(Activity activity) {
+        String packageName = activity.getApplicationContext().getPackageName();
+        Intent intent = new Intent();
+        final int apiLevel = Build.VERSION.SDK_INT;
+        if (apiLevel >= 9) { // above 2.3
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts(SCHEME, packageName, null);
+            intent.setData(uri);
+        } else { // below 2.3
+            final String appPkgName = (apiLevel == 8 ? APP_PKG_NAME_22
+                    : APP_PKG_NAME_21);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setClassName(APP_DETAILS_PACKAGE_NAME,
+                    APP_DETAILS_CLASS_NAME);
+            intent.putExtra(appPkgName, packageName);
+        }
+        activity.startActivityForResult(intent,REQ_CODE_SETTINGS);
     }
 }
